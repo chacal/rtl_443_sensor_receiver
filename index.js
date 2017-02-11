@@ -18,7 +18,7 @@ startHttpServer()
 ////  Sensor data parsing from rtl_433 output
 
 function startRtl_433() {
-  const rtl_433 = spawn('rtl_433', ['-l', '12000', '-F', 'json', '-R', '4', '-R', '33', '-R', '19'])
+  const rtl_433 = spawn('rtl_433', ['-s', '1000000', '-F', 'json', '-R', '4', '-R', '33', '-R', '19'])
   const stdout = readline.createInterface({input: rtl_433.stdout})
   stdout.on('line', handleLine)
 }
