@@ -6,8 +6,9 @@ const morgan = require('morgan')
 
 const sensorCache = {}
 const sensorToInstanceMap = {  // Map rtl_433 'id' field to own sensor instances, see Evernote for instance bindings
-  1: 50,
-  167: 51
+  1:   50,
+  167: 51,
+  2:   52,
 }
 
 startRtl_433()
