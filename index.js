@@ -32,7 +32,7 @@ function handleLine(line) {
     const json = JSON.parse(line)
     handleInputJson(json)
   } catch(e) {
-    console.log('Failed to parse input line:', line, e)
+    log.info('Failed to parse input line:', line, e)
   }
 }
 
@@ -42,14 +42,14 @@ function handleInputJson(json) {
   } else if(json.model === 'Waveman Switch Transmitter') {
     handleSwitchTransmitter(json)
   } else {
-    console.log('Got unknown message', json)
+    log.warn('Got unknown message', json)
   }
 }
 
 function handleWT450OrNexus(json) {
   const instance = sensorToInstanceMap[json.id]
   if(!instance) {
-    console.log('No instance mapping for rtl_433 ID', json.id)
+    log.warn('No instance mapping for rtl_433 ID', json.id)
     return
   }
   const t = { instance, tag: 't', temperature: json.temperature_C, ts: new Date() }
@@ -89,7 +89,7 @@ function startHttpServer() {
 function startMqttClient(brokerUrl) {
   const client = mqtt.connect(brokerUrl)
   client.on('connect', function () {
-    console.log("Connected to MQTT server..")
+    log.info("Connected to MQTT server")
   })
   return client
 }
