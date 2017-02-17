@@ -54,7 +54,7 @@ function handleWT450OrNexus(json) {
 
 ////  HTTP server to provide parsed sensor data
 
-function startHttpServer(latestSensorValues) {
+function startHttpServer() {
   const app = express()
   app.use(morgan('combined'))
 
