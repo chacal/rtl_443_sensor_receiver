@@ -58,7 +58,7 @@ function handleWT450OrNexus(json) {
 }
 
 function handleSwitchTransmitter(json) {
-  mqttClient.publish(`/switch/intertechno/${json.id}/${json.channel}/${json.button}/state`, json.state.toUpperCase(), { retain: true, qos: 1 })
+  mqttClient.publish(`/switch/intertechno/${json.id.toLowerCase()}/${json.channel}/${json.button}/state`, json.state.toUpperCase(), { retain: true, qos: 1 })
 }
 
 
