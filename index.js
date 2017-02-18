@@ -1,11 +1,8 @@
 const spawn = require('child_process').spawn
 const readline = require('readline')
-const express = require('express')
 const log = require('winston')
-const morgan = require('morgan')
 const mqtt = require('mqtt')
 
-const sensorCache = {}
 const sensorToInstanceMap = {  // Map rtl_433 'id' field to own sensor instances, see Evernote for instance bindings
   1:   50,
   167: 51,
@@ -14,7 +11,6 @@ const sensorToInstanceMap = {  // Map rtl_433 'id' field to own sensor instances
 const MQTT_BROKER = 'mqtt://ha-opi'
 
 startRtl_433()
-startHttpServer()
 const mqttClient = startMqttClient(MQTT_BROKER)
 
 
@@ -52,9 +48,8 @@ function handleWT450OrNexus(json) {
     log.warn('No instance mapping for rtl_433 ID', json.id)
     return
   }
-  const t = { instance, tag: 't', temperature: json.temperature_C, ts: new Date() }
-  const h = { instance, tag: 'h', humidity: json.humidity, ts: new Date() }
-  sensorCache[instance] = { t, h }
+  mqttClient.publish(`/sensor/${instance}/t/state`, JSON.stringify({ value: json.temperature_C, ts: new Date() }), { retain: true, qos: 1 })
+  mqttClient.publish(`/sensor/${instance}/h/state`, JSON.stringify({ value: json.humidity, ts: new Date() }), { retain: true, qos: 1 })
 }
 
 function handleSwitchTransmitter(json) {
@@ -63,28 +58,7 @@ function handleSwitchTransmitter(json) {
 
 
 
-////  HTTP server to provide parsed sensor data
-
-function startHttpServer() {
-  const app = express()
-  app.use(morgan('combined'))
-
-  app.get('/sensor/:instance/:tag', (req, res) => {
-    if(sensorCache[req.params.instance] && sensorCache[req.params.instance][req.params.tag]) {
-      res.json(sensorCache[req.params.instance][req.params.tag]).end()
-    } else {
-      res.status(404).end()
-    }
-  })
-
-  app.listen(3000, function() {
-    log.info('rtl_433 sensor receiver listening on port 3000')
-  })
-}
-
-
-
-////  MQTT client for publishing events about RF switches
+////  MQTT client for publishing events about detected events
 
 function startMqttClient(brokerUrl) {
   const client = mqtt.connect(brokerUrl)
