@@ -48,8 +48,8 @@ function handleWT450OrNexus(json) {
     log.warn('No instance mapping for rtl_433 ID', json.id)
     return
   }
-  mqttClient.publish(`/sensor/${instance}/t/state`, JSON.stringify({ value: json.temperature_C, ts: new Date() }), { retain: true, qos: 1 })
-  mqttClient.publish(`/sensor/${instance}/h/state`, JSON.stringify({ value: json.humidity, ts: new Date() }), { retain: true, qos: 1 })
+  mqttClient.publish(`/sensor/${instance}/t/state`, JSON.stringify({ instance, tag: 't', temperature: json.temperature_C, ts: new Date() }), { retain: true, qos: 1 })
+  mqttClient.publish(`/sensor/${instance}/h/state`, JSON.stringify({ instance, tag: 'h', humidity: json.humidity, ts: new Date() }), { retain: true, qos: 1 })
 }
 
 function handleSwitchTransmitter(json) {
