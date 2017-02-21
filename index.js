@@ -48,12 +48,12 @@ function handleWT450OrNexus(json) {
     log.warn('No instance mapping for rtl_433 ID', json.id)
     return
   }
-  mqttClient.publish(`/sensor/${instance}/t/state`, JSON.stringify({ instance, tag: 't', temperature: json.temperature_C, ts: new Date() }), { retain: true, qos: 1 })
-  mqttClient.publish(`/sensor/${instance}/h/state`, JSON.stringify({ instance, tag: 'h', humidity: json.humidity, ts: new Date() }), { retain: true, qos: 1 })
+  mqttClient.publish(`/sensor/${instance}/t/state`, JSON.stringify({ instance, tag: 't', temperature: json.temperature_C, ts: new Date() }), { retain: true })
+  mqttClient.publish(`/sensor/${instance}/h/state`, JSON.stringify({ instance, tag: 'h', humidity: json.humidity, ts: new Date() }), { retain: true })
 }
 
 function handleSwitchTransmitter(json) {
-  mqttClient.publish(`/switch/intertechno/${json.id.toLowerCase()}/${json.channel}/${json.button}/state`, json.state.toUpperCase(), { retain: true, qos: 1 })
+  mqttClient.publish(`/switch/intertechno/${json.id.toLowerCase()}/${json.channel}/${json.button}/state`, json.state.toUpperCase(), { retain: true })
 }
 
 
@@ -61,7 +61,7 @@ function handleSwitchTransmitter(json) {
 ////  MQTT client for publishing events about detected events
 
 function startMqttClient(brokerUrl) {
-  const client = mqtt.connect(brokerUrl)
+  const client = mqtt.connect(brokerUrl, { queueQoSZero : false })
   client.on('connect', function () {
     log.info("Connected to MQTT server")
   })
