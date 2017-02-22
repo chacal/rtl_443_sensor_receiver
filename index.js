@@ -62,8 +62,8 @@ function handleSwitchTransmitter(json) {
 
 function startMqttClient(brokerUrl) {
   const client = mqtt.connect(brokerUrl, { queueQoSZero : false })
-  client.on('connect', function () {
-    log.info("Connected to MQTT server")
-  })
+  client.on('connect', () => log.info("Connected to MQTT server"))
+  client.on('offline', () => log.info('Disconnected from MQTT server'))
+  client.on('error', () => log.error('MQTT client error', e))
   return client
 }
