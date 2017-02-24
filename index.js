@@ -7,6 +7,7 @@ const sensorToInstanceMap = {  // Map rtl_433 'id' field to own sensor instances
   1:   50,
   167: 51,
   2:   52,
+  3:   53
 }
 const MQTT_BROKER = 'mqtt://mqtt-home.chacal.online'
 
