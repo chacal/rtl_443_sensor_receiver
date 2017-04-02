@@ -5,7 +5,7 @@ const mqtt = require('mqtt')
 
 const sensorToInstanceMap = {  // Map rtl_433 'id' field to own sensor instances, see Evernote for instance bindings
   1:   50,
-  167: 51,
+  199: 51,
   2:   52,
   3:   53
 }
